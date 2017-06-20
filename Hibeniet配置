@@ -1,0 +1,121 @@
+
+一个简单的Hibeniet入门例子,该例子是以hsqldb为数据库的
+
+1. 导入Hibernate相关jar包
+
+2. 编写hibernate.cfg.xml文件
+          作用: 该文件是hibernate初始化配置文件,配置使用的数据库等基本信息.
+          位置: src/hibernate.cfg.xml
+
+3. 创建实体类映射
+
+4. 手动创建数据库
+
+5. 编写代码,Hibernate可以自动创建表
+
+以下是一个实测过的例子
+
+  编写hibernate.cfg.xml文件
+  
+    <?xml version='1.0' encoding='utf-8'?>
+    <!DOCTYPE hibernate-configuration PUBLIC
+            "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+            "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+    <hibernate-configuration>
+        <session-factory>
+            <!-- Database connection settings -->
+            <property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
+            <property name="connection.url">jdbc:hsqldb:hsql://localhost</property>
+            <property name="connection.username">sa</property>
+            <property name="connection.password"></property>
+            <!-- JDBC connection pool (use the built-in) -->
+            <property name="connection.pool_size">1</property>
+            <!-- SQL dialect -->
+            <property name="dialect">org.hibernate.dialect.HSQLDialect</property>
+            <!-- Enable Hibernate's automatic session context management -->
+            <property name="current_session_context_class">thread</property>
+            <!-- Disable the second-level cache -->
+            <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+            <!-- Echo all executed SQL to stdout -->
+            <property name="show_sql">true</property>
+            <!-- Drop and re-create the database schema on startup -->
+            <property name="hbm2ddl.auto">update</property>
+            <mapping class="com.huawei.test1.pojo.User"/>
+        </session-factory>
+    </hibernate-configuration>
+      
+创建实体类映射
+    实体类映射采用注解方式
+   
+    
+    import javax.persistence.*;
+
+    @Entity
+    @Table(name="User")
+    public class User {
+
+        @Id
+        @GeneratedValue(strategy=GenerationType.AUTO)
+        @Column(name = "id")
+        private int id;
+
+        @Column(name = "name")
+        private String name;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+    }
+
+手动创建数据库
+   该例子是以hsqldb为数据库的,参考 hsqldb 对应文章
+
+
+编写代码,添加一条数据
+  Hibernate可以根据实体类创建对应的表
+  注解类需要在sessionFactory中注册才可以使用,注册方式有两种,任选一种都可以
+      1.在hibernate.cfg.xml做配置,添加属性<mapping class="com.huawei.test1.pojo.User"/>
+      2.在代码中配置,调用方法addAnnotatedClass(User.class)加入注释类,可以调用多次添加不同的注释类.
+
+   private Integer add() {
+        SessionFactory sessionFactory = new Configuration().
+              //addAnnotatedClass(User.class).
+                configure().
+                buildSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
+        session.beginTransaction();
+
+        User user = new User();
+        user.setName("name2");
+
+        Integer eventId = (Integer) session.save(user);
+        session.getTransaction().commit();
+        System.out.println("eventId= " + eventId);
+        return eventId;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
