@@ -1,0 +1,105 @@
+
+ManyToOne 多个从表对应一个主表
+
+怎么查询
+  正常添加数据就可以自动关联
+  
+可不可以反查询
+   可以从主表查从表数据
+   可以从从表查主表数据
+   
+注意什么
+  主表和从表的model toString方法不要都写对方的值,互相调用get方法,会导致死循环.
+  如果需要复写toString方法,建议只在主表中打印从表数据.
+  原因:
+    有主从表关系时,调用get方法时,Hibernate才会查询从表数据.
+  
+  
+怎么配置
+
+    1.在主表中添加注解
+        @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+        name="userid" 主表的列名,可以随便定义
+        @JoinColumn(name="userid")
+        private User1 user1;
+        
+     2.从表写正常的表字段注解,不用定义其他的属性.
+    
+import javax.persistence.*;
+
+@Entity
+@Table(name="User")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    @Column(name = "id")
+    private int id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "age")
+    private String age;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name="userid")
+    private User1 user1;
+
+    public User1 getUser1() {
+        return user1;
+    }
+
+    public void setUser1(User1 user1) {
+        this.user1 = user1;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", age='" + age + '\'' +
+                ", user1=" + user1 +
+                '}';
+    }
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
