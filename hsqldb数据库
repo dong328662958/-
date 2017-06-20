@@ -1,0 +1,51 @@
+
+HSQL
+      内存数据库
+      优点: 容易配置,简单易用
+
+官网: http://www.hsqldb.org/
+
+在项目根目录创建data目录,进入目录,执行该命令,开启数据库服务,数据库内容保存在data目录中
+hsqldb的jar包需要放在src/lib下面,如果放在其他目录下,注意修改命令路径
+java -classpath ../lib/hsqldb.jar org.hsqldb.Server
+
+hsqldb.jar中自带了一个数据库页面管理工具
+
+    进入data目录,执行该命令,开启页面管理工具
+    java -classpath ../lib/hsqldb.jar org.hsqldb.util.DatabaseManagerSwing
+
+    或者在jar包目录执行下面命令,打开该页面
+           java -cp hsqldb.jar org.hsqldb.util.DatabaseManagerSwing
+
+    连接时选择：Type   HSQL Database Engine Server
+    输入SQL语句,点击 Execute SQL,执行sql语句.
+
+
+hsqldb在hibernate.cfg.xml中的配置信息为:
+
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <!-- Database connection settings -->
+        <property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
+        <property name="connection.url">jdbc:hsqldb:hsql://localhost</property>
+        <property name="connection.username">sa</property>
+        <property name="connection.password"></property>
+        <!-- JDBC connection pool (use the built-in) -->
+        <property name="connection.pool_size">1</property>
+        <!-- SQL dialect -->
+        <property name="dialect">org.hibernate.dialect.HSQLDialect</property>
+        <!-- Enable Hibernate's automatic session context management -->
+        <property name="current_session_context_class">thread</property>
+        <!-- Disable the second-level cache -->
+        <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+        <!-- Echo all executed SQL to stdout -->
+        <property name="show_sql">true</property>
+        <!-- Drop and re-create the database schema on startup -->
+        <property name="hbm2ddl.auto">update</property>
+    </session-factory>
+</hibernate-configuration>
+
