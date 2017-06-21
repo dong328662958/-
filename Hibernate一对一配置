@@ -1,0 +1,26 @@
+
+从表配置
+@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+@JoinColumn(name="userid")
+private User1 user1;
+
+主表配置
+@OneToOne(mappedBy = "user1",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+private User user;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
