@@ -5,9 +5,11 @@ HSQL
 
 官网: http://www.hsqldb.org/
 
-在项目根目录创建data目录,进入目录,执行该命令,开启数据库服务,数据库内容保存在data目录中
-hsqldb的jar包需要放在src/lib下面,如果放在其他目录下,注意修改命令路径
+1. 在项目根目录创建data目录,进入目录,执行该命令,开启数据库服务,数据库内容保存在data目录中
+2. 删除data目录下所有文件,重新执行命令,重置数据库.win 命令行删除命令为: del /F /S /Q *
+3. hsqldb的jar包需要放在src/lib下面,如果放在其他目录下,注意修改命令路径
 java -classpath ../lib/hsqldb.jar org.hsqldb.Server
+
 
 hsqldb.jar中自带了一个数据库页面管理工具
 
