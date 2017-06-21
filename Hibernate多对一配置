@@ -1,93 +1,172 @@
 
-ManyToOne 多个从表对应一个主表
-
-怎么查询
-  正常添加数据就可以自动关联
-  
+ManyToOne 
+    多个从表对应一个主表
+    ManyToOne在那个表中,那个表就是从表
+    
+OneToMany
+    一个主表对应多个从表
+    OneToMany在那个表中,那个表就是主表
+    
 可不可以反查询
    可以从主表查从表数据
    可以从从表查主表数据
    
-注意什么
+注意
   主表和从表的model toString方法不要都写对方的值,互相调用get方法,会导致死循环.
   如果需要复写toString方法,建议只在主表中打印从表数据.
   原因:
     有主从表关系时,调用get方法时,Hibernate才会查询从表数据.
   
-  
 怎么配置
-
-    1.在主表中添加注解
+    在下面的例子中
+        User1 表示主表
+        User  表示从表
+    
+    1.从表中添加注解
+        ManyToOne在那个表中,那个表就是从表
         @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-        name="userid" 主表的列名,可以随便定义
+        
+        name="userid" 从表的外键列名,对应主表的ID,可以随便定义
         @JoinColumn(name="userid")
         private User1 user1;
         
-     2.从表写正常的表字段注解,不用定义其他的属性.
-    
-import javax.persistence.*;
+     2.主表中添加注解
+         OneToMany在那个表中,那个表就是主表
+         mappedBy="user1" 从表定义的外键字段名称,主从表的关联关系
+         @OneToMany(mappedBy="user1",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+         private List<User> user;
+      
+从表注解类示例:
+    import javax.persistence.*;
 
-@Entity
-@Table(name="User")
-public class User {
+    @Entity
+    @Table(name="User")
+    public class User {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    @Column(name = "id")
-    private int id;
+        @Id
+        @GeneratedValue(strategy=GenerationType.AUTO)
+        @Column(name = "id")
+        private int id;
 
-    @Column(name = "name")
-    private String name;
+        @Column(name = "name")
+        private String name;
 
-    @Column(name = "age")
-    private String age;
+        @Column(name = "age")
+        private String age;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name="userid")
-    private User1 user1;
+        @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+        @JoinColumn(name="userid")
+        private User1 user1;
 
-    public User1 getUser1() {
-        return user1;
+        public User1 getUser1() {
+            return user1;
+        }
+
+        public void setUser1(User1 user1) {
+            this.user1 = user1;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getAge() {
+            return age;
+        }
+
+        public void setAge(String age) {
+            this.age = age;
+        }
+
+        @Override
+        public String toString() {
+            return "User{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    ", age='" + age + '\'' +
+    //                ", user1=" + user1 +
+                    '}';
+        }
     }
 
-    public void setUser1(User1 user1) {
-        this.user1 = user1;
-    }
 
-    public int getId() {
-        return id;
-    }
+主表注解类示例:
+    import javax.persistence.*;
+    import java.util.List;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+    @Entity
+    @Table(name="User1")
+    public class User1 {
 
-    public String getName() {
-        return name;
-    }
+        @Id
+        @GeneratedValue(strategy=GenerationType.AUTO)
+        @Column(name = "id")
+        private int id;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+        @Column(name = "name")
+        private String name;
 
-    public String getAge() {
-        return age;
-    }
+        @Column(name = "sex")
+        private String sex;
 
-    public void setAge(String age) {
-        this.age = age;
-    }
+        @OneToMany(mappedBy="user1",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+        private List<User> user;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age='" + age + '\'' +
-                ", user1=" + user1 +
-                '}';
+        public List<User> getUser() {
+            return user;
+        }
+
+        public void setUser(List<User> user) {
+            this.user = user;
+        }
+
+        public String getSex() {
+            return sex;
+        }
+
+        public void setSex(String sex) {
+            this.sex = sex;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+
+        @Override
+        public String toString() {
+            return "User1{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    ", sex='" + sex + '\'' +
+                    ", user=" + user +
+                    '}';
+        }
     }
- }
 
 
 
