@@ -86,7 +86,7 @@
 
 编写代码,添加一条数据
   Hibernate可以根据实体类创建对应的表
-  注解类需要在sessionFactory中注册才可以使用,注册方式有两种,任选一种都可以
+  注解类需要在sessionFactory中注册才可以使用,注册方式有两种,任选一种都可以,不能两种都选
       1.在hibernate.cfg.xml做配置,添加属性<mapping class="com.huawei.test1.pojo.User"/>
       2.在代码中配置,调用方法addAnnotatedClass(User.class)加入注释类,可以调用多次添加不同的注释类.
 
