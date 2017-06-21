@@ -1,0 +1,135 @@
+
+Hibernate有3中查询方式
+  1. Hibernate 标准查询,推荐使用
+  2. Hibernate 查询语言（HQL）查询,是一种面向对象的查询语言
+  3. 原生SQL查询
+  
+  下面一一举例说明:
+  
+1.Hibernate 标准查询,推荐使用
+
+	查询
+	
+		查所有
+		Criteria cr = session.createCriteria(Employee.class);  
+		List results = cr.list(); 
+		
+		查一个
+		User user = (User) session.get(User.class, userId);
+		Persion aPerson = (Persion) session.load(Persion.class, personId);
+		
+		Restrictions中包含了sql中的所有条件查询
+		
+		条件查询
+		cr.add(Restrictions.eq("salary", 2000)); 
+		
+		模糊查询
+		cr.add(Restrictions.like("firstName", "zara%"));
+		
+		模糊查询,区分大小写名称,精确查询
+		cr.add(Restrictions.ilike("firstName", "zara%"));
+		
+		分页
+		cr.setFirstResult(1);
+		cr.setMaxResults(10);
+		
+		排序
+		crit.addOrder(Order.asc("salary"));
+		crit.addOrder(Order.desc("salary"));
+		
+	函数
+		总数
+		cr.setProjection(Projections.rowCount());
+		
+		某个列总数
+		cr.setProjection(Projections.countDistinct("firstName"));
+		
+		最大值
+		cr.setProjection(Projections.max("salary"));
+	
+  其他操作,请查看封装的Hibernate工具类
+	  增加
+	  修改
+	  删除
+  
+  
+  2. Hibernate 查询语言（HQL）查询,是一种面向对象的查询语言
+  	
+      使用方式如下
+
+      Query query = session.createQuery(hql);
+      List results = query.list();
+
+      查询所有
+      String hql = "FROM Employee";
+
+      where order by
+      String hql = "FROM Employee E WHERE E.id > 10 ORDER BY E.salary DESC";
+
+      使用占位符
+      String hql = "FROM Employee E WHERE E.id = :employee_id";
+      query.setParameter("employee_id",10);
+
+      分页,查询0-5,5条数据
+      String hql = "FROM Employee";
+      query.setFirstResult(0);
+      query.setMaxResults(5);
+      List results = query.list();
+
+      更新
+      String hql = "UPDATE Employee set salary = :salary WHERE id = :employee_id";
+      query.setParameter("salary", 1000);
+      query.setParameter("employee_id", 10);
+      int result = query.executeUpdate();
+
+      删除
+      String hql = "DELETE FROM Employee WHERE id = :employee_id";
+      int result = query.executeUpdate();
+
+      新增
+      INSERT INTO语句
+      String hql = "INSERT INTO Employee(firstName, lastName, salary) SELECT firstName, lastName, salary FROM old_employee";
+      int result = query.executeUpdate();
+
+      函数
+      distinct 关键字表示只计算行集中的唯一值。下面的查询只计算唯一的值:
+      String hql = "SELECT count(distinct E.firstName) FROM Employee E";
+      List results = query.list();
+  
+  
+  3. 原生SQL查询  
+  
+      查询所有
+      String sql = "SELECT * FROM EMPLOYEE";
+      SQLQuery query = session.createSQLQuery(sql);
+      query.addEntity(Employee.class);
+      List results = query.list(); 
+
+      占位符查询
+      query.addEntity(Employee.class);
+      query.setParameter("employee_id", 10);
+      List results = query.list(); 
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
