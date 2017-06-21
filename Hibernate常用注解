@@ -1,0 +1,64 @@
+
+类上的注解
+
+对应数据表的实体类
+@Entity   
+
+作用于类上,对应的表名
+@Table(name="user")  
+作用于类上,表名,所属数据库
+@Table(name = "user1", schema = "test") 
+
+
+字段上的注解
+
+主键
+@Id
+采用数据库自增方式生成主键
+@GeneratedValue(strategy=GenerationType.AUTO) 
+
+使用uuid做自增主键
+	  @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid")
+    @Column(name = "id")
+    private String id;
+    
+列名
+@Column(name = "name") 
+@Column(name="name",nullable=false) 列名为name,不能为null
+    其他选项
+	    name     列名
+	    length   字符串长度
+	    nullable 不能为null
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
